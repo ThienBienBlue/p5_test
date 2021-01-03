@@ -105,6 +105,10 @@ class GameState
         this._aggro = [];
     }
 
+    /**
+     * Updates the generational index and returns an entity to the pool.
+     * :param gidx: Generational index of item to restore.
+     */
     dealloc(gidx)
     {
         this._gidx_alloc.dealloc(gidx);
@@ -189,6 +193,9 @@ class GameState
                 case Behaviour.bullet:
                     this.update_bullet(idx);
                     break;
+                case Behaviour.player:
+                    this.update_player();
+                    break;
             }
         }
         this._tick = (this._tick + 1) % 420;
@@ -223,6 +230,22 @@ class GameState
         this._ypos[idx] += delta_y;
     }
 
+    /**
+     * The keyTyped functional also updates the player, but this one is rapid.
+     * This controls movement as a result.
+     */
+    update_player()
+    {
+        if (keyIsDown(87))
+            game.move_player(0, -3);
+        if (keyIsDown(65))
+            game.move_player(-3, 0);
+        if (keyIsDown(83))
+            game.move_player(0, 3);
+        if (keyIsDown(68))
+            game.move_player(3, 0);
+    }
+
     spawn_enemy(x, y)
     {
         const gidx = this._gidx_alloc.alloc();
@@ -232,7 +255,7 @@ class GameState
 
     update_enemy(idx)
     {
-        if (this._tick % 210 == 0)
+        if (this._tick % 42 == 0)
         {
             const aggro = this._aggro[idx];
             var target = this._gidx_alloc.real_idx(aggro);
@@ -389,18 +412,6 @@ function keyTyped()
 {
     switch (key)
     {
-        case 'w': 
-            game.move_player(0, -3);
-            break;
-        case 'a':
-            game.move_player(-3, 0);
-            break;
-        case 's':
-            game.move_player(0, 3);
-            break;
-        case 'd':
-            game.move_player(3, 0);
-            break;
         case 'j':
             game.spawn_player_bullet(-5, 0);
             break;
