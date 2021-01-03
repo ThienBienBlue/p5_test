@@ -311,15 +311,19 @@ class GameState
         if (this._tick % 21 == 0)
         {
             const aggro = this._aggro[idx];
-            if (this._gidx_alloc.real_idx(aggro) == -1)
+            const target = this._gidx_alloc.real_idx(aggro);
+            if (target == -1)
                 return;
 
             const gidx = this._gidx_alloc.gen(idx);
             const xpos = this._xpos[idx];
             const ypos = this._ypos[idx];
 
-            const bullet_xvel = this._xvel[idx] * 5 / 3;
-            const bullet_yvel = this._yvel[idx] * 5 / 3;
+            const delta_y = this._ypos[target] - ypos;
+            const delta_x = this._xpos[target] - xpos;
+            const angle = Math.atan2(delta_y, delta_x);
+            const bullet_xvel = Math.cos(angle) * 5;
+            const bullet_yvel = Math.sin(angle) * 5;
             this.spawn_bullet(xpos, ypos, bullet_xvel, bullet_yvel, gidx);
         }
         if (this._tick % 3 == 0)
