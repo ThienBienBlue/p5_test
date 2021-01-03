@@ -380,6 +380,7 @@ class GameState
         for (var idx = 0; idx < len; idx += 1)
         {
             if (idx == bullet_idx || this._behaviour[idx] == Behaviour.bullet
+                || this._alive[idx] == false 
                 || this._gidx_alloc.real_idx(owner) == idx)
             {
                 continue;
